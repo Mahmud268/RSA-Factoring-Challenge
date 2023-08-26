@@ -1,0 +1,38 @@
+#!/usr/bin/python3
+
+import sys
+import subprocess
+
+def check_factor(args):
+    if len(args) != 3:
+        num2 = 1
+        count = 0
+        for a in args:
+            if count > 1:
+                num2 *= int(a)
+            count += 1
+    else:
+        num2 = int(args[2])
+
+    num1 = int(args[1])
+    num = args[0].replace(':', '=')
+
+    if num2 > num1:
+        num1, num2 = num2, num1
+
+    return f"{num}{num1}*{num2}"
+
+if len(sys.argv) != 2:
+    print('Usage: python script.py <file>')
+    sys.exit(1)
+else:
+    filename = sys.argv[1]
+    with open(filename, 'r') as file:
+        for line in file:
+            result = subprocess.run(['factor', line.strip()], stdout=subprocess.PIPE, text=True)
+            result = result.stdout.strip()
+            result = result.replace(':', '=')
+            result = result.split()
+            result = check_factor(result)
+            print(result)
+
